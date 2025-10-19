@@ -1,49 +1,75 @@
-// Wait for the entire HTML document to load before running the script
-document.addEventListener('DOMContentLoaded', () => {
+function appendToDisplay(value) {
+    document.getElementById('display').value += value;
+}
 
-    // Get the display screen and all the buttons
-    const display = document.querySelector('.display');
-    const buttons = document.querySelector('.buttons');
+function clearDisplay() {
+    document.getElementById('display').value = '';
+}
 
-    // Add a single click event listener to the parent container of the buttons
-    buttons.addEventListener('click', (event) => {
-        // Check if the clicked element is actually a button
-        if (!event.target.matches('button')) {
-            return;
+function calculate() {
+    try {
+        let expression = document.getElementById('display').value;
+        expression = expression.replace(/\^/g, '**');
+        let result = math.evaluate(expression);
+        if (result && typeof result.toString === 'function') {
+            document.getElementById('display').value = result.toString();
+        } else {
+            document.getElementById('display').value = result;
         }
+    } catch (error) {
+        document.getElementById('display').value = 'Error';
+    }
+}
 
-        const button = event.target;
-        const value = button.value;
-        let displayValue = display.value;
+function solveEquation() {
+    try {
+        let expr = document.getElementById('display').value;
+        let sides = expr.split('=');
+        if (sides.length !== 2) throw new Error('Equation must contain "="');
+        let equation = sides[0] + ' - (' + sides[1] + ')';
+        let x = math.parse(equation).compile();
+        let scope = { x: 0 };
+        let roots = [];
+        
+        for (let i = -10; i <= 10; i += 0.1) {
+            scope.x = i;
+            let val = x.evaluate(scope);
+            if (Math.abs(val) < 0.01) {
+                roots.push(Number(i.toFixed(2)));
+            }
+        }
+        roots = [...new Set(roots)];
+        document.getElementById('display').value = roots.length ? 'x = ' + roots.join(', ') : 'No real roots';
+    } catch (error) {
+        document.getElementById('display').value = 'Error: Invalid equation';
+    }
+}
 
-        // Use a switch statement to handle different button types
-        switch (value) {
-            case 'C':
-                // Clear the display
-                display.value = '';
-                break;
-            
-            case 'DEL':
-                // Delete the last character
-                display.value = displayValue.slice(0, -1);
-                break;
-
-            case '=':
-                // Try to calculate the result
-                try {
-                    // Use eval() to compute the string expression.
-                    // Note: eval() can be a security risk in complex apps, but it's fine for this simple project.
-                    display.value = eval(displayValue);
-                } catch (error) {
-                    // If there's an error (e.g., "5++2"), show "Error"
-                    display.value = 'Error';
+function solveLinearSystem() {
+    try {
+        let expr = document.getElementById('display').value;
+        let equations = expr.split(',');
+        let A = [];
+        let b = [];
+        equations.forEach(eq => {
+            let [left, right] = eq.split('=').map(s => s.trim());
+            let node = math.parse(left + ' - (' + right + ')');
+            let coeffs = { x: 0, y: 0 };
+            node.traverse((n) => {
+                if (n.isSymbolNode) {
+                    coeffs[n.name] = 1;
+                } else if (n.isOperatorNode && n.op === '*') {
+                    if (n.args[0].isConstantNode && n.args[1].isSymbolNode) {
+                        coeffs[n.args[1].name] = n.args[0].value;
+                    }
                 }
-                break;
-
-            default:
-                // For all other buttons (numbers, operators), append their value to the display
-                display.value += value;
-                break;
-        }
-    });
-});
+            });
+            A.push([coeffs.x || 0, coeffs.y || 0]);
+            b.push(math.evaluate(right));
+        });
+        let solution = math.lusolve(A, b);
+        document.getElementById('display').value = `x = ${solution[0].toFixed(2)}, y = ${solution[1].toFixed(2)}`;
+    } catch (error) {
+        document.getElementById('display').value = 'Error: Invalid system';
+    }
+}

@@ -3,41 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Advanced Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.2.0/math.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <div class="calculator">
-        <input type="text" class="display" readonly>
+        <input type="text" id="display" placeholder="0" readonly>
         <div class="buttons">
-            <button class="operator" value="C">C</button>
-            <button class="operator" value="DEL">DEL</button>
-            <button class="operator" value="%">%</button>
-            <button class="operator" value="/">/</button>
-
-            <button value="7">7</button>
-            <button value="8">8</button>
-            <button value="9">9</button>
-            <button class="operator" value=""></button>
-
-            <button value="4">4</button>
-            <button value="5">5</button>
-            <button value="6">6</button>
-            <button class="operator" value="-">-</button>
-
-            <button value="1">1</button>
-            <button value="2">2</button>
-            <button value="3">3</button>
-            <button class="operator" value="+">+</button>
-
-            <button value="0">0</button>
-            <button value=".">.</button>
-            <button class="equal" value="=">=</button>
+            <button class="function" onclick="appendToDisplay('sin(')">sin</button>
+            <button class="function" onclick="appendToDisplay('cos(')">cos</button>
+            <button class="function" onclick="appendToDisplay('tan(')">tan</button>
+            <button class="function" onclick="appendToDisplay('log(')">log</button>
+            <button class="function" onclick="appendToDisplay('sqrt(')">√</button>
+            
+            <button class="matrix" onclick="appendToDisplay('math.matrix([[ ')">Matrix Start</button>
+            <button class="matrix" onclick="appendToDisplay('],[ ')">New Row</button>
+            <button class="matrix" onclick="appendToDisplay(']]) ')">Matrix End</button>
+            <button class="operator" onclick="appendToDisplay('inv(')">Inv</button>
+            <button class="operator" onclick="appendToDisplay('det(')">Det</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            <button class="operator" onclick="appendToDisplay('^')">^</button>
+            
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('*')">*</button>
+            <button onclick="appendToDisplay('(')"> (</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            <button onclick="appendToDisplay(')')"> )</button>
+            
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="function" onclick="appendToDisplay('pi')">π</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            <button class="function" onclick="appendToDisplay('e')">e</button>
+            
+            <button class="solve" onclick="solveEquation()">Solve Eq</button>
+            <button class="solve" onclick="solveLinearSystem()">Solve Sys</button>
+            <button class="clear" onclick="clearDisplay()">Clear</button>
+            <button class="equal" onclick="calculate()">=</button>
         </div>
     </div>
-
-    <script src="script.js" defer></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
