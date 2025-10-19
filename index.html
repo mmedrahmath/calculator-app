@@ -1,58 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Calculator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.2.0/math.js"></script>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scientific Calculator - Replica</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="calculator">
-        <input type="text" id="display" placeholder="0" readonly>
-        <div class="buttons">
-            <button class="function" onclick="appendToDisplay('sin(')">sin</button>
-            <button class="function" onclick="appendToDisplay('cos(')">cos</button>
-            <button class="function" onclick="appendToDisplay('tan(')">tan</button>
-            <button class="function" onclick="appendToDisplay('log(')">log</button>
-            <button class="function" onclick="appendToDisplay('sqrt(')">√</button>
-            
-            <button class="matrix" onclick="appendToDisplay('math.matrix([[ ')">Matrix Start</button>
-            <button class="matrix" onclick="appendToDisplay('],[ ')">New Row</button>
-            <button class="matrix" onclick="appendToDisplay(']]) ')">Matrix End</button>
-            <button class="operator" onclick="appendToDisplay('inv(')">Inv</button>
-            <button class="operator" onclick="appendToDisplay('det(')">Det</button>
-            
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('/')">/</button>
-            <button class="operator" onclick="appendToDisplay('^')">^</button>
-            
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('*')">*</button>
-            <button onclick="appendToDisplay('(')"> (</button>
-            
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
-            <button onclick="appendToDisplay(')')"> )</button>
-            
-            <button onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-            <button class="function" onclick="appendToDisplay('pi')">π</button>
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            <button class="function" onclick="appendToDisplay('e')">e</button>
-            
-            <button class="solve" onclick="solveEquation()">Solve Eq</button>
-            <button class="solve" onclick="solveLinearSystem()">Solve Sys</button>
-            <button class="clear" onclick="clearDisplay()">Clear</button>
-            <button class="equal" onclick="calculate()">=</button>
-        </div>
+  <div class="calc">
+    <div class="top">
+      <div class="label">SCIENTIFIC CALCULATOR</div>
+      <div class="solar"></div>
+      <div class="onoff">ON</div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="display-wrap">
+      <div class="screen">
+        <div id="expr" class="expr">&nbsp;</div>
+        <div id="display" class="display">0</div>
+      </div>
+    </div>
+
+    <div class="keys">
+      <!-- Row 1 -->
+      <button class="btn red" data-fn="off">OFF</button>
+      <button class="btn yellow" id="invBtn">INV<span class="small">A</span></button>
+      <button class="btn dark" data-fn="mode">MODE</button>
+      <button class="btn red" data-fn="ac">AC</button>
+      <button class="btn light" data-fn="ce">C/CE</button>
+
+      <!-- Row 2 -->
+      <button class="btn dark" data-key="sin">sin<span class="small"> sin⁻¹</span></button>
+      <button class="btn dark" data-key="cos">cos<span class="small"> cos⁻¹</span></button>
+      <button class="btn dark" data-key="tan">tan<span class="small"> tan⁻¹</span></button>
+      <button class="btn dark" data-fn="inv1x">1/x<span class="small"> x!</span></button>
+      <button class="btn light" data-fn="drg">DRG</button>
+
+      <!-- Row 3 -->
+      <button class="btn dark" data-fn="ln">ln<span class="small"> e^x</span></button>
+      <button class="btn dark" data-fn="log">log<span class="small"> 10^x</span></button>
+      <button class="btn dark" data-fn="xpow">x<sup>2</sup><span class="small"> x^y</span></button>
+      <button class="btn dark" data-fn="xy">x<sup>y</sup></button>
+      <button class="btn light" data-fn="deg">DEG</button>
+
+      <!-- Row 4 -->
+      <button class="btn small" data-fn="rm">RM</button>
+      <button class="btn small" data-fn="xminusm">X↔M</button>
+      <button class="btn small" data-fn="mplus">M+</button>
+      <button class="btn small" data-fn="mminus">M-</button>
+      <button class="btn light" data-fn="del">DEL</button>
+
+      <!-- Row 5 -->
+      <button class="btn num" data-key="7">7</button>
+      <button class="btn num" data-key="8">8</button>
+      <button class="btn num" data-key="9">9</button>
+      <button class="btn op" data-op="/">÷</button>
+      <button class="btn light" data-fn="hex">HEX</button>
+
+      <!-- Row 6 -->
+      <button class="btn num" data-key="4">4</button>
+      <button class="btn num" data-key="5">5</button>
+      <button class="btn num" data-key="6">6</button>
+      <button class="btn op" data-op="*">×</button>
+      <button class="btn light" data-fn="dec">DEC</button>
+
+      <!-- Row 7 -->
+      <button class="btn num" data-key="1">1</button>
+      <button class="btn num" data-key="2">2</button>
+      <button class="btn num" data-key="3">3</button>
+      <button class="btn op" data-op="-">−</button>
+      <button class="btn light" data-fn="bin">BIN</button>
+
+      <!-- Row 8 -->
+      <button class="btn num zero" data-key="0">0</button>
+      <button class="btn num" data-key=".">.</button>
+      <button class="btn op" data-op="+">+</button>
+      <button class="btn eq" data-fn="equals">=</button>
+
+      <!-- Row 9 bottom tiny -->
+      <button class="btn small" data-fn="flo">FLO</button>
+      <button class="btn small" data-fn="sci">SCI</button>
+      <button class="btn small" data-fn="eng">ENG</button>
+      <button class="btn small" data-fn="neg">+/-</button>
+      <button class="btn small" data-fn="exp">EXP</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
